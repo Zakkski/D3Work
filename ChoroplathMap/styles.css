@@ -4,11 +4,25 @@ body {
 }
 
 .country {
-    fill: lightgreen;
-    stroke: black;
-    stroke-opacity: .1;
+    stroke: rgb(39, 39, 39);
+    stroke-width: 0.05px;
+}
+
+.country:hover {
+    fill: red;
 }
 
 .sphere {
     fill: #4242e4;
+}
+
+.tick text {
+  font-size: 1em;
+  fill: #000;
+  font-family: sans-serif;
+}
+
+.tick circle {
+  stroke: black;
+  stroke-opacity: 0.5;
 }

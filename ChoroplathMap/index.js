@@ -1,37 +1,53 @@
 const svg = d3.select('svg');
 
-// d3-geo-projections package has even more projections
 const projection = d3.geoNaturalEarth1();
-// const projection = d3.geoMercator();
-// const projection = d3.geoOrthographic();
 const pathGenerator = d3.geoPath().projection(projection);
 
 const g = svg.append('g');
+
+const colorLegendG = svg.append('g')
+    .attr('transform', `translate(30,300)`);
+
+svg.call(d3.zoom().on('zoom', () => {
+    g.attr('transform', d3.event.transform);
+}));
 
 g.append('path')
     .attr('class', 'sphere')
     .attr('d', pathGenerator({type: 'Sphere'}));
 
-// svg.call(d3.zoom().on('zoom', () => {
-//     g.attr('transform', event.transform);
-// }));
+// const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+const colorScale = d3.scaleOrdinal();
+// switching these changes whole viz with this structure
+// const colorValue = d => d.properties.income_grp;
+const colorValue = d => d.properties.economy;
 
-// links to topojson data, topojson package is for converting from topo to geojson
-// d3.json('https://unpkg.com/world-atlas@1.1.4/world/50m.json', data => {
-//     console.log(data);
-// })
-d3.json('https://unpkg.com/world-atlas@1.1.4/world/110m.json').then(data => {
-    const countries = topojson.feature(data, data.objects.countries);
+
+loadAndProcessData().then(countries => {
+
+    // colorScale.domain(countries.features.map(colorValue));
+    // the reason to separate this is that the above domain function removes duplicates
+    // and if we were to sort above we would also be sorting the duplicates
+    // colorScale.domain(colorScale.domain().sort());
+    // better way below 
+    colorScale.domain(countries.features.map(colorValue))
+              .domain(colorScale.domain().sort().reverse())
+              .range(d3.schemeSpectral[colorScale.domain().length]);
+
+    colorLegendG.call(colorLegend, {
+        colorScale,
+        circleRadius: 8,
+        spacing: 20,
+        textOffset: 12,
+        backgroundRectWidth: 235
+    });
 
     g.selectAll('path')
         .data(countries.features)
         .enter().append('path')
         .attr('class', 'country')
         .attr('d', pathGenerator)
-        // Below is the same because it only takes 'd'
-        //  .attr('d', d => pathGenerator(d))
+        .attr('fill', d => colorScale(colorValue(d)))
+        .append('title')
+        .text(d => `${d.properties.name}: ${colorValue(d)}`);
 })
-// Promise.all([
-//     d3.tsv('https://unpkg.com/world-atlas@1.1.4/world/50m.tsv'),
-//     d3.json('https://unpkg.com/world-atlas@1.1.4/world/50m.json')
-// ]).then(([tsv, topoJSONdata])) => {

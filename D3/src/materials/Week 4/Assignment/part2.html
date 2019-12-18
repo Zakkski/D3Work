@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Air Quality</title>
+</head>
+<body>
+    <form id="options">
+        <input type="radio" name="sort" value="state" checked>Sort By State
+        <input type="radio" name="sort" value="desc">Sort By Emissions Descending
+        <input type="radio" name="sort" value="asc">Sort By Emissions Ascending
+    </form>
+    <div id="viz"></div>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="./airQuality.js"></script>
+</body>
+</html>

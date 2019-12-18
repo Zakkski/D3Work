@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Code\\D3Work\\.NET\\APITesting\\APITesting.csproj": {}
+    "C:\\Code\\D3Work\\.NET\\APITesting\\web-api\\APITesting.csproj": {}
   },
   "projects": {
-    "C:\\Code\\D3Work\\.NET\\APITesting\\APITesting.csproj": {
+    "C:\\Code\\D3Work\\.NET\\APITesting\\web-api\\APITesting.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Code\\D3Work\\.NET\\APITesting\\APITesting.csproj",
+        "projectUniqueName": "C:\\Code\\D3Work\\.NET\\APITesting\\web-api\\APITesting.csproj",
         "projectName": "APITesting",
-        "projectPath": "C:\\Code\\D3Work\\.NET\\APITesting\\APITesting.csproj",
+        "projectPath": "C:\\Code\\D3Work\\.NET\\APITesting\\web-api\\APITesting.csproj",
         "packagesPath": "C:\\Users\\ZKwiecinski\\.nuget\\packages\\",
-        "outputPath": "C:\\Code\\D3Work\\.NET\\APITesting\\obj\\",
+        "outputPath": "C:\\Code\\D3Work\\.NET\\APITesting\\web-api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

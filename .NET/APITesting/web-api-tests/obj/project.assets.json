@@ -6866,11 +6866,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Code\\D3Work\\.NET\\APITesting\\web-api-tests\\web-api-tests.csproj",
+      "projectUniqueName": "c:\\Code\\CourseWork\\.NET\\APITesting\\web-api-tests\\web-api-tests.csproj",
       "projectName": "web-api-tests",
-      "projectPath": "C:\\Code\\D3Work\\.NET\\APITesting\\web-api-tests\\web-api-tests.csproj",
+      "projectPath": "c:\\Code\\CourseWork\\.NET\\APITesting\\web-api-tests\\web-api-tests.csproj",
       "packagesPath": "C:\\Users\\ZKwiecinski\\.nuget\\packages\\",
-      "outputPath": "C:\\Code\\D3Work\\.NET\\APITesting\\web-api-tests\\obj\\",
+      "outputPath": "c:\\Code\\CourseWork\\.NET\\APITesting\\web-api-tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -6889,8 +6889,8 @@
       "frameworks": {
         "netcoreapp3.0": {
           "projectReferences": {
-            "C:\\Code\\D3Work\\.NET\\APITesting\\web-api\\APITesting.csproj": {
-              "projectPath": "C:\\Code\\D3Work\\.NET\\APITesting\\web-api\\APITesting.csproj"
+            "c:\\Code\\CourseWork\\.NET\\APITesting\\web-api\\APITesting.csproj": {
+              "projectPath": "c:\\Code\\CourseWork\\.NET\\APITesting\\web-api\\APITesting.csproj"
             }
           }
         }

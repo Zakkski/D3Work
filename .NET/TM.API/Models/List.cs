@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace TM.API.Models
 {
     public class List
@@ -6,6 +8,7 @@ namespace TM.API.Models
         public string Name { get; set; }
         public User User { get; set; }
         public int UserId { get; set; }
+        public ICollection<Models.Task> Tasks { get; set; }
 
     }
 }

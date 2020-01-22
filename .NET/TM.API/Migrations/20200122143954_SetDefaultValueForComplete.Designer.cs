@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TM.API.Data;
 
 namespace TM.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200122143954_SetDefaultValueForComplete")]
+    partial class SetDefaultValueForComplete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,10 +31,15 @@ namespace TM.API.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TaskId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TaskId");
 
                     b.HasIndex("UserId");
 
@@ -54,12 +61,7 @@ namespace TM.API.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ListId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ListId");
 
                     b.ToTable("Tasks");
                 });
@@ -87,18 +89,13 @@ namespace TM.API.Migrations
 
             modelBuilder.Entity("TM.API.Models.List", b =>
                 {
+                    b.HasOne("TM.API.Models.Task", null)
+                        .WithMany("ListId")
+                        .HasForeignKey("TaskId");
+
                     b.HasOne("TM.API.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TM.API.Models.Task", b =>
-                {
-                    b.HasOne("TM.API.Models.List", "List")
-                        .WithMany("Tasks")
-                        .HasForeignKey("ListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

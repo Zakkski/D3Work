@@ -24,6 +24,7 @@ namespace TM.API
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetSection("ConnectionStrings:DevDbConnection").Value));
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IListRepository, ListRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

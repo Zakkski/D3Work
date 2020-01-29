@@ -3,5 +3,8 @@ export class Place {
                 public title: string,
                 public description: string,
                 public imgURL: string,
-                public price: number) {}
+                public price: number,
+                public availableFrom: Date,
+                public availableTo: Date,
+                public userId: string) {}
 }

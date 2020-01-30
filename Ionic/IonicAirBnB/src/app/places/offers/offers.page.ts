@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class OffersPage implements OnInit, OnDestroy {
     offers: Place[];
+    isLoading = false;
     // because you don't want memory leaks you have to unsub from when page is destroy
     private placesSub: Subscription;
   constructor(private placesService: PlacesService) { }
@@ -19,6 +20,13 @@ export class OffersPage implements OnInit, OnDestroy {
       // don't use take(1) because then I continue to get updates
       this.placesSub = this.placesService.places.subscribe(places => {
           this.offers = places;
+      });
+  }
+
+  ionViewWillEnter() {
+      this.isLoading = true;
+      this.placesService.fetchPlaces().subscribe(() => {
+          this.isLoading = false;
       });
   }
 

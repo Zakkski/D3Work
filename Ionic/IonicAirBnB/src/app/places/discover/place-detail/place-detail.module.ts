@@ -8,16 +8,18 @@ import { PlaceDetailPageRoutingModule } from './place-detail-routing.module';
 
 import { PlaceDetailPage } from './place-detail.page';
 import { CreateBookingComponent } from 'src/app/bookings/create-booking/create-booking.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    PlaceDetailPageRoutingModule
-  ],
-  declarations: [PlaceDetailPage, CreateBookingComponent],
-  // Needed if component is used not through routing ie as a modal
-  entryComponents: [CreateBookingComponent]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        PlaceDetailPageRoutingModule,
+        SharedModule
+    ],
+    declarations: [PlaceDetailPage, CreateBookingComponent],
+    // Needed if component is used not through routing ie as a modal
+    entryComponents: [CreateBookingComponent]
 })
-export class PlaceDetailPageModule {}
+export class PlaceDetailPageModule { }

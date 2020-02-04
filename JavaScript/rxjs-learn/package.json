@@ -1,0 +1,20 @@
+{
+  "name": "rxjs-learn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --mode development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "rxjs": "^6.5.4",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5",
+    "webpack-dev-server": "^3.10.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
+}

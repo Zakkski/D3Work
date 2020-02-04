@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { BehaviorSubject, generate, of } from 'rxjs';
 import { take, map, tap, delay, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { PlaceLocation } from './location.model';
 
 interface PlaceData {
     availableFrom: string;
@@ -13,10 +14,11 @@ interface PlaceData {
     price: number;
     title: string;
     userId: string;
+    location: PlaceLocation;
 }
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class PlacesService {
     private _places: BehaviorSubject<Place[]> = new BehaviorSubject<Place[]>([]);
@@ -25,15 +27,15 @@ export class PlacesService {
         return this._places.asObservable();
     }
 
-    constructor(private authService: AuthService, private http: HttpClient) {}
+    constructor(private authService: AuthService, private http: HttpClient) { }
 
     fetchPlaces() {
-        return this.http.get<{[key: string]: PlaceData}>('https://ionic-angular-airbnb-e8483.firebaseio.com/offered-places.json')
+        return this.http.get<{ [key: string]: PlaceData }>('https://ionic-angular-airbnb-e8483.firebaseio.com/offered-places.json')
             .pipe(map(resData => {
                 const places = [];
                 for (const key in resData) {
                     if (resData.hasOwnProperty(key)) {
-                        places.push(new Place(key, resData[key].title, resData[key].description, resData[key].imgURL, resData[key].price, new Date(resData[key].availableFrom), new Date(resData[key].availableTo), resData[key].userId));
+                        places.push(new Place(key, resData[key].title, resData[key].description, resData[key].imgURL, resData[key].price, new Date(resData[key].availableFrom), new Date(resData[key].availableTo), resData[key].userId, resData[key].location));
                     }
                 }
                 return places;
@@ -45,14 +47,14 @@ export class PlacesService {
     getPlace(id: string) {
         return this.http.get<PlaceData>(`https://ionic-angular-airbnb-e8483.firebaseio.com/offered-places/${id}.json`)
             .pipe(map(placeData => {
-                return new Place(id, placeData.title, placeData.description, placeData.imgURL, placeData.price, new Date(placeData.availableFrom), new Date(placeData.availableTo), placeData.userId);
+                return new Place(id, placeData.title, placeData.description, placeData.imgURL, placeData.price, new Date(placeData.availableFrom), new Date(placeData.availableTo), placeData.userId, placeData.location);
             }));
         // return this.places.pipe(take(1), map(places => {
         //     return {...places.find(p => p.id === id)};
         // }));
     }
 
-    addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date) {
+    addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location: PlaceLocation) {
         let generatedId: string;
         const newPlace = new Place(
             null,
@@ -62,18 +64,19 @@ export class PlacesService {
             price,
             dateFrom,
             dateTo,
-            this.authService.userId
+            this.authService.userId,
+            location
         );
-        return this.http.post<{name: string}>('https://ionic-angular-airbnb-e8483.firebaseio.com/offered-places.json', { ...newPlace })
+        return this.http.post<{ name: string }>('https://ionic-angular-airbnb-e8483.firebaseio.com/offered-places.json', { ...newPlace })
             .pipe(switchMap(resData => {
                 generatedId = resData.name;
                 return this.places;
             }),
-            take(1),
-            tap(places => {
-                newPlace.id = generatedId;
-                this._places.next(places.concat(newPlace));
-            }));
+                take(1),
+                tap(places => {
+                    newPlace.id = generatedId;
+                    this._places.next(places.concat(newPlace));
+                }));
         // pipe(take(1)) only takes one output from subject before canceling
         // tap acts on the data without consuming the observable
         // delay pauses the obs chain
@@ -97,7 +100,7 @@ export class PlacesService {
                 const updatePlaceIndex = places.findIndex(pl => pl.id === placeId);
                 updatedPlaces = [...places];
                 const oldPlace = updatedPlaces[updatePlaceIndex];
-                updatedPlaces[updatePlaceIndex] = new Place(oldPlace.id, title, description, oldPlace.imgURL, oldPlace.price, oldPlace.availableFrom, oldPlace.availableTo, oldPlace.userId);
+                updatedPlaces[updatePlaceIndex] = new Place(oldPlace.id, title, description, oldPlace.imgURL, oldPlace.price, oldPlace.availableFrom, oldPlace.availableTo, oldPlace.userId, oldPlace.location);
                 return this.http.put(`https://ionic-angular-airbnb-e8483.firebaseio.com/offered-places/${placeId}.json`, { ...updatedPlaces[updatePlaceIndex] })
             }), tap(() => {
                 this._places.next(updatedPlaces);

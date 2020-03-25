@@ -1,12 +1,13 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ActionSheetController, AlertController } from '@ionic/angular';
 import { MapModalComponent } from '../../map-modal/map-modal.component';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { map, switchMap } from 'rxjs/operators';
 import { getLocaleDateFormat } from '@angular/common';
-import { PlaceLocation } from 'src/app/places/location.model';
+import { PlaceLocation, Coordinates } from 'src/app/places/location.model';
 import { of } from 'rxjs';
+import { Plugins, Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-location-picker',
@@ -18,12 +19,45 @@ export class LocationPickerComponent implements OnInit {
     isLoading = false;
     @Output() locationPick = new EventEmitter<PlaceLocation>();
 
-    constructor(private modalCtrl: ModalController, private http: HttpClient) { }
+    constructor(private modalCtrl: ModalController, private http: HttpClient, private actionSheetController: ActionSheetController, private alertCtrl: AlertController) { }
 
     ngOnInit() { }
 
 
     onPickLocation() {
+        this.actionSheetController.create({
+            header: 'Please Choose', buttons: [
+                { text: 'Auto-Locate', handler: () => { this.locateUser(); } },
+                { text: 'Pick on Map', handler: () => { this.openMap(); } },
+                { text: 'Cancel', role: 'cancel' }
+            ]
+        }).then(actionSheetEl => {
+            actionSheetEl.present();
+        });
+
+
+    }
+
+    private locateUser() {
+        if (!Capacitor.isPluginAvailable('Geolocation')) {
+            this.showErrorAlert();
+            return;
+        }
+        Plugins.Geolocation.getCurrentPosition().then(position => {
+            const coordinates: Coordinates = { lat: position.coords.latitude, lng: position.coords.longitude };
+        }).catch(err => {
+            this.showErrorAlert();
+        });
+    }
+
+    private showErrorAlert() {
+        this.alertCtrl.create({ header: 'Could not fetch location', message: 'Please use the map to pick a location!' })
+            .then(el => {
+                el.present();
+            });
+    }
+
+    private openMap() {
         this.modalCtrl.create({ component: MapModalComponent }).then(modalEl => {
             modalEl.onDidDismiss().then(data => {
                 if (!data.data) {

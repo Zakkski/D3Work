@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import Radium, { StyleRoot } from 'radium';
-import './App.css';
+// This is Class Modules config
+import classes from './App.css';
 import Person from './Person/Person';
 
 class App extends Component {
@@ -12,6 +13,8 @@ class App extends Component {
     ],
     showPersons: false,
   };
+
+  // To edit config need to run npm run eject
 
   // Only possible in non-class components
   // Returns two objects (state, function to update state)
@@ -112,20 +115,20 @@ class App extends Component {
       // index is not a good key because if the list changes then all of the keys will change. Doesn't give a solid source of truth
     }
 
-    const classes = [];
+    const assignedClasses = [];
     if (this.state.persons.length <= 2) {
-      classes.push('red');
+      assignedClasses.push(classes.red);
     }
     if (this.state.persons.length <= 1) {
-      classes.push('bold');
+      assignedClasses.push(classes.bold);
     }
 
     return (
       // Needed with Radium for using media queries
       //   <StyleRoot>
-      <div className='App'>
+      <div className={classes.App}>
         <h1>Hi, I'm a React App</h1>
-        <p className={classes.join(' ')}>This is really working</p>
+        <p className={assignedClasses.join(' ')}>This is really working</p>
         <button style={style} onClick={this.togglePersonsHandler}>
           Toggle Persons
         </button>

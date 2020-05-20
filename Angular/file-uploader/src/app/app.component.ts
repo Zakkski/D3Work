@@ -16,6 +16,8 @@ export class AppComponent {
     this.uploadedFiles = element.target.files;
   }
 
+  // For the proxy server it won't log that the proxy is active unless I have a pathRewriter.
+
   upload() {
     const formData = new FormData();
     for (var i = 0; i < this.uploadedFiles.length; i++) {

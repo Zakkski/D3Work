@@ -1,10 +1,10 @@
 const express = require("express");
-const app = express();
-const port = 3000;
 const multipart = require("connect-multiparty");
 const multipartMiddleware = multipart({ uploadDir: "./uploads" });
 const bodyParser = require("body-parser");
 
+const port = 3000;
+const app = express();
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -12,9 +12,15 @@ app.use(
   })
 );
 
-app.get("/api/upload", multipartMiddleware, (req, res) => {
+app.post("/api/upload", multipartMiddleware, (req, res) => {
   res.json({
-    message: "uploaded successfully",
+    message: "Uploaded successfully",
+  });
+});
+
+app.get("/api/upload", (req, res) => {
+  res.json({
+    message: "Switch to a put request ya dringus",
   });
 });
 

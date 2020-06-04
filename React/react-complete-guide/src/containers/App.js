@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 // import Radium, { StyleRoot } from 'radium';
 // This is Class Modules config
 import classes from './App.css';
-import Person from './Person/Person';
+import withClass from '../components/hoc/WithClass';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
+import AuthContext from '../context/auth-context';
 
 class App extends Component {
   state = {
@@ -12,6 +15,8 @@ class App extends Component {
       { id: 3, name: 'Chris', age: 41 },
     ],
     showPersons: false,
+    changeCounter: 0,
+    authenticated: false,
   };
 
   // To edit config need to run npm run eject
@@ -50,7 +55,13 @@ class App extends Component {
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
-    this.setState({ persons: persons });
+    // update state when you depend on old state
+    this.setState((prevState, props) => {
+      return {
+        persons: persons,
+        changeCounter: prevState.changeCounter + 1,
+      };
+    });
   };
 
   deletePersonHandler = (personId) => {
@@ -68,6 +79,10 @@ class App extends Component {
     this.setState({ showPersons: !doesShow });
   };
 
+  loginHandler = () => {
+    this.setState({ authenticated: true });
+  };
+
   // Use bind(this) to bind the reference to this class, add args as the values that the method is called with
   //       <button onClick={switchNameHandler.bind(this, 'Maximilian')}>
   //        <button onClick={() => switchNameHandler('Maximilian')}
@@ -75,65 +90,61 @@ class App extends Component {
   // Alternative is to just use ES6 arrow functions, this may cause excess re-rendering. Bind is more efficient
   render() {
     // This allows you to scope styling to specific elements
-    const style = {
-      backgroundColor: 'green',
-      color: 'white',
-      font: 'inherit',
-      padding: '8px',
-      border: '1px solid blue',
-      cursor: 'pointer',
-      ':hover': {
-        backgroundColor: 'lightgreen',
-        color: 'black',
-      },
-    };
+    // const style = {
+    //   backgroundColor: 'green',
+    //   color: 'white',
+    //   font: 'inherit',
+    //   padding: '8px',
+    //   border: '1px solid blue',
+    //   cursor: 'pointer',
+    //   ':hover': {
+    //     backgroundColor: 'lightgreen',
+    //     color: 'black',
+    //   },
+    // };
 
     // For conditional showing: can use ternary expression (condition ? <div></div> : null)
     let persons = null;
     if (this.state.showPersons) {
       persons = (
-        <div>
-          {this.state.persons.map((person, id) => {
-            return (
-              <Person
-                name={person.name}
-                age={person.age}
-                click={() => this.deletePersonHandler(id)}
-                key={person.id}
-                changed={(event) => this.nameChangedHandler(event, person.id)}
-              />
-            );
-          })}
-        </div>
+        <Persons
+          persons={this.state.persons}
+          clicked={this.deletePersonHandler}
+          changed={this.nameChangedHandler}
+          isAuthenticated={this.state.authenticated}
+        />
       );
 
-      style.backgroundColor = 'red';
-      style[':hover'] = {
-        backgroundColor: 'salmon',
-        color: 'black',
-      };
+      //   style.backgroundColor = 'red';
+      //   style[':hover'] = {
+      //     backgroundColor: 'salmon',
+      //     color: 'black',
+      //   };
       // index is not a good key because if the list changes then all of the keys will change. Doesn't give a solid source of truth
-    }
-
-    const assignedClasses = [];
-    if (this.state.persons.length <= 2) {
-      assignedClasses.push(classes.red);
-    }
-    if (this.state.persons.length <= 1) {
-      assignedClasses.push(classes.bold);
     }
 
     return (
       // Needed with Radium for using media queries
       //   <StyleRoot>
-      <div className={classes.App}>
-        <h1>Hi, I'm a React App</h1>
-        <p className={assignedClasses.join(' ')}>This is really working</p>
-        <button style={style} onClick={this.togglePersonsHandler}>
-          Toggle Persons
-        </button>
-        {persons}
-      </div>
+      //   <WithClass classes={classes.App}>
+      <React.Fragment>
+        <AuthContext.Provider
+          value={{
+            authenticated: this.state.authenticated,
+            login: this.loginHandler,
+          }}
+        >
+          <Cockpit
+            title={this.props.appTitle}
+            showPersons={this.state.showPersons}
+            personsLength={this.state.persons.length}
+            clicked={this.togglePersonsHandler}
+            login={this.loginHandler}
+          />
+          {persons}
+        </AuthContext.Provider>
+      </React.Fragment>
+      //   </WithClass>
       //   </StyleRoot>
     );
   }
@@ -141,4 +152,4 @@ class App extends Component {
 
 // Radium adds functionality for css
 // export default Radium(App);
-export default App;
+export default withClass(App, classes.App);
